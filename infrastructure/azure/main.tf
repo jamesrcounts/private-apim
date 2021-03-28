@@ -1,5 +1,5 @@
 locals {
-  project = "tfaz"
+  project = "private-apim"
 
   tags = {
     project = local.project

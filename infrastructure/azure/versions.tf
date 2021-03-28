@@ -15,9 +15,17 @@ terraform {
       version = "~> 3.0.0"
     }
   }
+
+  backend "remote" {
+    organization = "jamesrcounts"
+
+    workspaces {
+      name = "private-apim"
+    }
+  }
 }
 
-provider azurerm {
+provider "azurerm" {
   features {
     key_vault {
       recover_soft_deleted_key_vaults = true
