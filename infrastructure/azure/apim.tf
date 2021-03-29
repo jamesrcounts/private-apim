@@ -17,3 +17,21 @@ resource "azurerm_api_management" "internal" {
     subnet_id = azurerm_subnet.apim.id
   }
 }
+
+# $gatewayHostname = "api.contoso.net"                 # API gateway host
+# $portalHostname = "portal.contoso.net"               # API developer portal host
+# $gatewayCertCerPath = "C:\Users\Contoso\gateway.cer" # full path to api.contoso.net .cer file
+# $gatewayCertPfxPath = "C:\Users\Contoso\gateway.pfx" # full path to api.contoso.net .pfx file
+# $portalCertPfxPath = "C:\Users\Contoso\portal.pfx"   # full path to portal.contoso.net .pfx file
+# $gatewayCertPfxPassword = "certificatePassword123"   # password for api.contoso.net pfx certificate
+# $portalCertPfxPassword = "certificatePassword123"    # password for portal.contoso.net pfx certificate
+
+# $certPwd = ConvertTo-SecureString -String $gatewayCertPfxPassword -AsPlainText -Force
+# $certPortalPwd = ConvertTo-SecureString -String $portalCertPfxPassword -AsPlainText -Force
+
+# $proxyHostnameConfig = New-AzApiManagementCustomHostnameConfiguration -Hostname $gatewayHostname -HostnameType Proxy -PfxPath $gatewayCertPfxPath -PfxPassword $certPwd
+# $portalHostnameConfig = New-AzApiManagementCustomHostnameConfiguration -Hostname $portalHostname -HostnameType DeveloperPortal -PfxPath $portalCertPfxPath -PfxPassword $certPortalPwd
+
+# $apimService.ProxyCustomHostnameConfiguration = $proxyHostnameConfig
+# $apimService.PortalCustomHostnameConfiguration = $portalHostnameConfig
+# Set-AzApiManagement -InputObject $apimService
