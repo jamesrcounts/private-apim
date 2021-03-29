@@ -3,7 +3,7 @@
 locals {
   gateway_hostname   = "api.jamesrcounts.com"
   portal_hostname    = "portal.jamesrcounts.com"
-  apim_resource_name = "${random_pet.fido.id}-api"
+  apim_resource_name = "apim-${random_pet.fido.id}"
 }
 
 
