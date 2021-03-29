@@ -28,25 +28,29 @@ resource "azurerm_api_management" "internal" {
   sku_name             = "Developer_1"
   virtual_network_type = "Internal"
 
-  hostname_configuration {
-    proxy {
-      host_name            = local.gateway_hostname
-      certificate          = filebase64("certificates/gateway.pfx")
-      certificate_password = "Password123$"
-    }
-
-    portal {
-      host_name            = local.portal_hostname
-      certificate          = filebase64("certificates/portal.pfx")
-      certificate_password = "Password123$"
-    }
-  }
-
   identity {
     type = "SystemAssigned"
   }
 
   virtual_network_configuration {
     subnet_id = azurerm_subnet.apim.id
+  }
+}
+
+resource "azurerm_api_management_custom_domain" "domain" {
+  depends_on = [
+    azurerm_role_assignment.keyvault_secrets_user
+  ]
+
+  api_management_id = azurerm_api_management.internal.id
+
+  proxy {
+    host_name    = local.gateway_hostname
+    key_vault_id = azurerm_key_vault_certificate.gateway.secret_id
+  }
+
+  developer_portal {
+    host_name    = local.portal_hostname
+    key_vault_id = azurerm_key_vault_certificate.portal.secret_id
   }
 }
