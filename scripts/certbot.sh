@@ -5,4 +5,7 @@ set -euo pipefail
 certbot --version
 
 # Get certificates using Route53 for validation
-certbot certonly --dns-route53 -d api.jamesrcounts.com
+DOMAIN="portal.jamesrcounts.com"
+certbot certonly --dns-route53 -d ${DOMAIN}
+mkdir -p ./certs/${DOMAIN}
+cp -R /etc/letsencrypt/archive/${DOMAIN}/* ./certs/${DOMAIN}/
