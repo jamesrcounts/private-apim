@@ -11,6 +11,7 @@ resource "azurerm_public_ip_prefix" "pib" {
 
 resource "azurerm_public_ip" "agw" {
   allocation_method   = "Static"
+  domain_name_label   = local.project
   location            = azurerm_resource_group.main.location
   name                = "pip-${local.project}-agw"
   public_ip_prefix_id = azurerm_public_ip_prefix.pib.id
