@@ -7,6 +7,7 @@ resource "azurerm_resource_group" "main" {
 resource "azurerm_role_assignment" "keyvault_secrets_user" {
   for_each = {
     apim = azurerm_api_management.internal.identity.0.principal_id
+    agw  = azurerm_user_assigned_identity.agw.principal_id
   }
 
   principal_id         = each.value
