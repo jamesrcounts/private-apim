@@ -42,6 +42,9 @@ RUN if [ "${INSTALL_DOCKER}" = "true" ]; then \
     fi \
     && rm -rf /var/lib/apt/lists/*
 
+COPY library-scripts/aws.sh  /tmp/library-scripts/
+RUN bash /tmp/library-scripts/aws.sh 
+
 COPY library-scripts/certbot.sh  /tmp/library-scripts/
 RUN bash /tmp/library-scripts/certbot.sh \
     && rm -rf /var/lib/apt/lists/*
