@@ -1,16 +1,27 @@
-resource "azurerm_key_vault_certificate" "gateway" {
-  name         = "gateway-cert"
+resource "azurerm_key_vault_certificate" "apim" {
+  for_each = {
+    gateway = {
+      hostname = local.gateway_hostname
+      password = var.gateway_cert_password
+    }
+    portal = {
+      hostname = local.portal_hostname
+      password = var.portal_cert_password
+    }
+  }
+
+  name         = replace(each.value.hostname, ".", "-")
   key_vault_id = azurerm_key_vault.ops.id
   tags         = local.tags
 
   certificate {
-    contents = filebase64("certificates/api.jamesrcounts.com.pfx")
-    password = var.gateway_cert_password
+    contents = filebase64("certificates/${each.value.hostname}.pfx")
+    password = each.value.password
   }
 
   certificate_policy {
     issuer_parameters {
-      name = "Self"
+      name = "Unknown"
     }
 
     key_properties {
@@ -20,32 +31,14 @@ resource "azurerm_key_vault_certificate" "gateway" {
       reuse_key  = false
     }
 
-    secret_properties {
-      content_type = "application/x-pkcs12"
-    }
-  }
-}
+    lifetime_action {
+      action {
+        action_type = "EmailContacts"
+      }
 
-resource "azurerm_key_vault_certificate" "portal" {
-  name         = "portal-cert"
-  key_vault_id = azurerm_key_vault.ops.id
-  tags         = local.tags
-
-  certificate {
-    contents = filebase64("certificates/portal.jamesrcounts.com.pfx")
-    password = var.portal_cert_password
-  }
-
-  certificate_policy {
-    issuer_parameters {
-      name = "Self"
-    }
-
-    key_properties {
-      exportable = true
-      key_size   = 2048
-      key_type   = "RSA"
-      reuse_key  = false
+      trigger {
+        lifetime_percentage = 50
+      }
     }
 
     secret_properties {
@@ -53,4 +46,3 @@ resource "azurerm_key_vault_certificate" "portal" {
     }
   }
 }
-

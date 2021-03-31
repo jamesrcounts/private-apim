@@ -27,6 +27,7 @@ resource "azurerm_api_management" "internal" {
   resource_group_name  = azurerm_resource_group.main.name
   sku_name             = "Developer_1"
   virtual_network_type = "Internal"
+  tags                 = local.tags
 
   identity {
     type = "SystemAssigned"
@@ -46,11 +47,11 @@ resource "azurerm_api_management_custom_domain" "domain" {
 
   proxy {
     host_name    = local.gateway_hostname
-    key_vault_id = azurerm_key_vault_certificate.gateway.secret_id
+    key_vault_id = azurerm_key_vault_certificate.apim["gateway"].secret_id
   }
 
   developer_portal {
     host_name    = local.portal_hostname
-    key_vault_id = azurerm_key_vault_certificate.portal.secret_id
+    key_vault_id = azurerm_key_vault_certificate.apim["portal"].secret_id
   }
 }

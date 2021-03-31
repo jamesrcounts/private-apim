@@ -27,7 +27,7 @@ locals {
 
   agw_listeners = {
     gateway = {
-      certificate = azurerm_key_vault_certificate.gateway.secret_id
+      certificate = azurerm_key_vault_certificate.apim["gateway"].secret_id
       hostname    = local.gateway_hostname
       path        = "/status-0123456789abcdef"
       interval    = 30
@@ -35,7 +35,7 @@ locals {
       threshold   = 8
     }
     portal = {
-      certificate = azurerm_key_vault_certificate.portal.secret_id
+      certificate = azurerm_key_vault_certificate.apim["portal"].secret_id
       hostname    = local.portal_hostname
       path        = "/internal-status-0123456789abcdef"
       interval    = 60
@@ -53,6 +53,7 @@ resource "azurerm_application_gateway" "agw" {
   name                = local.application_gateway_name
   resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
+  tags                = local.tags
 
   backend_address_pool {
     name         = local.backend_address_pool_name
@@ -95,7 +96,7 @@ resource "azurerm_application_gateway" "agw" {
   sku {
     name     = "WAF_v2"
     tier     = "WAF_v2"
-    capacity = 2
+    capacity = 1
   }
 
   gateway_ip_configuration {
